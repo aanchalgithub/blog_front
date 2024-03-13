@@ -1,19 +1,22 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import Avtar from '../images/avatar1.jpg'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import moment from 'moment';
 
-const PostAuthor = () => {
+const PostAuthor = ({ user, createdAt }) => {
+
   return (
-    <Link to='/posts/users/sdfsdf' className='post__author'>
-        <div className="post__author-avtar">
-            <img src={Avtar} alt="" />
-        </div>
-        <div className="post__author-details">
-            <h5>By : Aanchal Verma</h5>
-            <small>Just Now</small>
-        </div>
+    <Link to={`/posts/users/${user?._id}`} className='post__author'>
+      <div className="post__author-avatar">
+        <img src={`${process.env.REACT_APP_ASSESTS_BASE_URL}/uploads/${user?.avtar}`} height={30} alt="" />
+      </div>
+      <div className="post__author-details">
+        <h5>By: {user?.name}</h5>
+        <small>
+          <p>{moment(createdAt).fromNow()}</p>
+        </small>
+      </div>
     </Link>
-  )
-}
+  );
+};
 
-export default PostAuthor
+export default PostAuthor;

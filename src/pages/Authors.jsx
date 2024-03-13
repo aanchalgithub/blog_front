@@ -1,30 +1,41 @@
-import React, { useState } from 'react'
-import Avtar1 from '../images/avatar1.jpg'
-import Avtar2 from '../images/avatar2.jpg'
-import Avtar3 from '../images/avatar3.jpg'
-import Avtar4 from '../images/avatar4.jpg'
-import Avtar5 from '../images/avatar5.jpg'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
+import Loader from '../Components/Loader'
 
 
-const authorsData = [
-  {id : 1, avtar : Avtar1, name : 'Aanchal Verma',posts : 3},
-  {id : 2, avtar : Avtar2, name : 'Anshul Verma',posts : 5},
-  {id : 3, avtar : Avtar3, name : 'Rekha Verma',posts : 0},
-  {id : 4, avtar : Avtar4, name : 'Rakesh Verma',posts : 2},
-  {id : 5, avtar : Avtar5, name : 'Abhishek Aanchal Soni',posts : 1},
-]
+
 
 const Authors = () => {
-  const [authors, setAuthors] = useState(authorsData)
+  const [authors, setAuthors] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+useEffect(() => {
+    const getAuthors = async () => {
+      setIsLoading(true)
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/users`)
+        setAuthors(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+    setIsLoading(false)
+    }
+    getAuthors();
+}, [])
+
+  if(isLoading){
+    return <Loader/>
+  }
+
   return (
     <section className="authors">
       {authors.length > 0 ?<div className="container authors__container">
       {
-        authors.map(({id, avtar, name, posts})=>{
+        authors.map(({_id : id, avtar, name, posts})=>{
             return <Link to={`/posts/users/${id}`} className='author'>
               <div className="author__avtar">
-                <img src={avtar} alt={`Image of ${name}`} />
+                <img src={`${process.env.REACT_APP_ASSESTS_BASE_URL}/uploads/${avtar}`} alt={`Image of ${name}`} />
               </div>
               <div className="author__info">
                 <h4>{name}</h4>
